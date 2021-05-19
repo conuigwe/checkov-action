@@ -57,3 +57,7 @@ runs:
     - ${{ inputs.output_format }}
     - ${{ inputs.download_external_modules }}
     - ${{ inputs.log_level }}
+
+outputs:
+  checkov_stdout:
+    description: 'output from checkov'
