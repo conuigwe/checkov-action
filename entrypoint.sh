@@ -1,14 +1,16 @@
 #!/bin/bash
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
-if [[ ! -z "$INPUT_CHECK" ]] && CHECK_FLAG=$INPUT_CHECK; then
+
+[[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
+[[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
+[[ ! -z "$INPUT_OUTPUT_FORMAT" ]] && OUTPUT_FLAG="--output $INPUT_OUTPUT_FORMAT"
+
+if [[ ! -z "$INPUT_CHECK" ]]; then
   CHECK_FLAG="--check $INPUT_CHECK,CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
 else
   CHECK_FLAG="--check CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
 fi
-[[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
-[[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
-[[ ! -z "$INPUT_OUTPUT_FORMAT" ]] && OUTPUT_FLAG="--output $INPUT_OUTPUT_FORMAT"
 
 if [ ! -z "$INPUT_QUIET" ] && [ "$INPUT_QUIET" = "true" ]; then
   QUIET_FLAG="--quiet"
