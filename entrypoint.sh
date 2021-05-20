@@ -1,7 +1,7 @@
 #!/bin/bash
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
-if [[ ! -z "$INPUT_CHECK" ]] && CHECK_FLAG="--check $INPUT_CHECK"; then
+if [[ ! -z "$INPUT_CHECK" ]] && CHECK_FLAG=$INPUT_CHECK; then
   CHECK_FLAG="--check $INPUT_CHECK,CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
 else
   CHECK_FLAG="--check CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
