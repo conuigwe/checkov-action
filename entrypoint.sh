@@ -55,45 +55,11 @@ if [ ! -z "$INPUT_SOFT_FAIL" ]; then
 fi
 
 echo "::add-matcher::checkov-problem-matcher.json"
+echo "running checkov on directory: $1"
+checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
+CHECKOV_EXIT_CODE=$?
 
-if [ -z "$GITHUB_HEAD_REF" ]; then
-  # No different commits, not a PR
-  # Check everything, not just a PR diff (there is no PR diff in this context).
-  # NOTE: this file scope may need to be expanded or refined further.
-  echo "running checkov on directory: $1"
-  checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
-  CHECKOV_EXIT_CODE=$?
-
-  echo "::set-output name=<checkov>::$(cat checkov_stdout)"
-else
-  pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
-
-  git fetch ${GITHUB_BASE_REF/#/'origin '} #&>/dev/null
-  git fetch ${GITHUB_HEAD_REF/#/'origin '} #&>/dev/null
-  BASE_REF=$(git rev-parse ${GITHUB_BASE_REF/#/'origin/'})
-  HEAD_REF=$(git rev-parse ${GITHUB_HEAD_REF/#/'origin/'})
-  DIFF_FILES=$(git diff --diff-filter=d --name-only $BASE_REF $HEAD_REF | tr '\n' ' ')
-
-  IFS=' ' read -r -a files2scan <<< "$DIFF_FILES"
-
-  SCAN_FILES_FLAG=""
-  if [ -z "$DIFF_FILES" ]; then
-    echo "No files to scan"
-    CHECKOV_EXIT_CODE=0
-  else
-    echo "running checkov on files: $DIFF_FILES"
-    for f in "${files2scan[@]}"
-    do
-      SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
-    done
-    checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
-    CHECKOV_EXIT_CODE=$?
-
-    echo "::set-output name=<checkov>::$(cat checkov_stdout)"
-  fi
-  
-fi
-
+echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
   echo "Cleaning up $INPUT_DIRECTORY/.external_modules directory"
