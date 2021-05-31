@@ -82,9 +82,9 @@ else
     checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
     CHECKOV_EXIT_CODE=$?
   fi
+  echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 fi
 
-echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
   echo "Cleaning up $INPUT_DIRECTORY/.external_modules directory"
