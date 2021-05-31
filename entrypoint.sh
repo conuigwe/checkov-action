@@ -60,6 +60,7 @@ echo "::add-matcher::checkov-problem-matcher.json"
 #touch checkov_stdout
 
 if [ -z "$GITHUB_HEAD_REF" ]; then
+  touch checkov_stdout
   # No different commits, not a PR
   # Check everything, not just a PR diff (there is no PR diff in this context).
   # NOTE: this file scope may need to be expanded or refined further.
@@ -70,7 +71,7 @@ if [ -z "$GITHUB_HEAD_REF" ]; then
   echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 else
   pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
-
+  touch checkov_stdout
   git fetch ${GITHUB_BASE_REF/#/'origin '} #&>/dev/null
   git fetch ${GITHUB_HEAD_REF/#/'origin '} #&>/dev/null
   BASE_REF=$(git rev-parse ${GITHUB_BASE_REF/#/'origin/'})
