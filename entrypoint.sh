@@ -97,6 +97,8 @@ else
   fi
 fi
 
+echo "::set-output name=<checkov>::$(cat checkov_stdout)"
+
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
   echo "Cleaning up $INPUT_DIRECTORY/.external_modules directory"
   #This directory must be removed here for the self hosted github runners run as non-root user.
