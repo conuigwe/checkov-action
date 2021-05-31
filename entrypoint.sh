@@ -103,5 +103,4 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   rm -fr $INPUT_DIRECTORY/.external_modules
   exit $CHECKOV_EXIT_CODE
 fi
-cat checkov_stdout
 exit $CHECKOV_EXIT_CODE
