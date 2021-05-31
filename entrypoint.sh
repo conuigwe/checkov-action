@@ -6,6 +6,7 @@
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
 [[ ! -z "$INPUT_OUTPUT_FORMAT" ]] && OUTPUT_FLAG="--output $INPUT_OUTPUT_FORMAT"
 
+CHECKOV_REPORT=${CHECKOV_REPORT:-"$HOME/report.out"}
 
 if [[ ! -z "$INPUT_CHECK" ]]; then
   CHECK_FLAG="--check $INPUT_CHECK,CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
@@ -60,18 +61,18 @@ echo "::add-matcher::checkov-problem-matcher.json"
 #touch checkov_stdout
 
 if [ -z "$GITHUB_HEAD_REF" ]; then
-  touch checkov_stdout
+
   # No different commits, not a PR
   # Check everything, not just a PR diff (there is no PR diff in this context).
   # NOTE: this file scope may need to be expanded or refined further.
   echo "running checkov on directory: $1"
-  checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG  > checkov_stdout
+  checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG  > $CHECKOV_REPORT
   CHECKOV_EXIT_CODE=$?
 
-  echo "::set-output name=<checkov>::$(cat checkov_stdout)"
+  #echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 else
   pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
-  touch checkov_stdout
+
   git fetch ${GITHUB_BASE_REF/#/'origin '} #&>/dev/null
   git fetch ${GITHUB_HEAD_REF/#/'origin '} #&>/dev/null
   BASE_REF=$(git rev-parse ${GITHUB_BASE_REF/#/'origin/'})
@@ -90,10 +91,10 @@ else
     do
       SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
     done
-    checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
+    checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > $CHECKOV_REPORT
     CHECKOV_EXIT_CODE=$?
 
-    echo "::set-output name=<checkov>::$(cat checkov_stdout)"
+    #echo "::set-output name=<checkov>::$(cat checkov_stdout)"
   fi
 fi
 
@@ -104,4 +105,5 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   exit $CHECKOV_EXIT_CODE
 fi
 
+cat $CHECKOV_REPORT
 exit $CHECKOV_EXIT_CODE
