@@ -6,6 +6,9 @@
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
 [[ ! -z "$INPUT_OUTPUT_FORMAT" ]] && OUTPUT_FLAG="--output $INPUT_OUTPUT_FORMAT"
 
+RC=0 #return code
+
+CHECKOV_REPORT=${INPUT_CHECKOV_REPORT:-"$HOME/report.out"}
 
 if [[ ! -z "$INPUT_CHECK" ]]; then
   CHECK_FLAG="--check $INPUT_CHECK,CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
@@ -59,8 +62,8 @@ echo "::add-matcher::checkov-problem-matcher.json"
 
 if [ -z "$GITHUB_HEAD_REF" ]; then
   echo "running checkov on directory: $1"
-  checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
-  CHECKOV_EXIT_CODE=$?
+  checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG
+  RC=$?
 else
   pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
 
@@ -80,8 +83,8 @@ else
     do
       SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
     done
-    checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
-    CHECKOV_EXIT_CODE=$?
+    checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG 
+    RC=$?
   fi
 fi
 
@@ -90,8 +93,8 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   echo "Cleaning up $INPUT_DIRECTORY/.external_modules directory"
   #This directory must be removed here for the self hosted github runners run as non-root user.
   rm -fr $INPUT_DIRECTORY/.external_modules
-  exit $CHECKOV_EXIT_CODE
+  exit $RC
 fi
 
-echo "::set-output name=<checkov>::$(cat checkov_stdout)"
-exit $CHECKOV_EXIT_CODE
+echo "exiting script: $RC"
+exit $RC
