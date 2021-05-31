@@ -6,6 +6,7 @@
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
 [[ ! -z "$INPUT_OUTPUT_FORMAT" ]] && OUTPUT_FLAG="--output $INPUT_OUTPUT_FORMAT"
 
+
 if [[ ! -z "$INPUT_CHECK" ]]; then
   CHECK_FLAG="--check $INPUT_CHECK,CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
 else
@@ -82,7 +83,6 @@ else
     checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
     CHECKOV_EXIT_CODE=$?
   fi
-  echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 fi
 
 
@@ -92,4 +92,6 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   rm -fr $INPUT_DIRECTORY/.external_modules
   exit $CHECKOV_EXIT_CODE
 fi
+
+echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 exit $CHECKOV_EXIT_CODE
