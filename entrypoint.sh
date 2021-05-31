@@ -57,7 +57,7 @@ fi
 
 echo "::add-matcher::checkov-problem-matcher.json"
 
-#touch checkov_stdout
+touch checkov_stdout
 
 if [ -z "$GITHUB_HEAD_REF" ]; then
 
