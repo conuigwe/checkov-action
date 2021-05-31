@@ -94,6 +94,7 @@ else
 
     echo "::set-output name=<checkov>::$(cat checkov.out)"
   fi
+fi
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
   echo "Cleaning up $INPUT_DIRECTORY/.external_modules directory"
