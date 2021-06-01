@@ -62,7 +62,7 @@ IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
 SCAN_FILES_FLAG=""
 
 if [ -z "$CHANGED_FILES" ]; then
-    echo "No files to scan"
+    echo "No files to scan" > checkov_stdout
     CHECKOV_EXIT_CODE=0
 else
   echo "running checkov on files: $CHANGED_FILES"
