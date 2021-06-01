@@ -58,14 +58,21 @@ fi
 echo "::add-matcher::checkov-problem-matcher.json"
 
 IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
-echo "running checkov on files: $CHANGED_FILES"
 
-for f in "${files2scan[@]}"
+SCAN_FILES_FLAG=""
+if [ -z "$CHANGED_FILES" ]; then
+    echo "No files to scan"
+    CHECKOV_EXIT_CODE=0
+else
+  echo "running checkov on files: $CHANGED_FILES"
+  for f in "${files2scan[@]}"
   do
     SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
   done
-checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
-CHECKOV_EXIT_CODE=$?
+  checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
+  
+  CHECKOV_EXIT_CODE=$?
+fi
 echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
