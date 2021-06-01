@@ -57,8 +57,14 @@ fi
 
 echo "::add-matcher::checkov-problem-matcher.json"
 
+IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
 echo "running checkov on files: $CHANGED_FILES"
-checkov $CHANGED_FILES $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
+
+for f in "${files2scan[@]}"
+  do
+    SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
+  done
+checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
 CHECKOV_EXIT_CODE=$?
 echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
