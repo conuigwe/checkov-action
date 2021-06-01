@@ -60,6 +60,7 @@ echo "::add-matcher::checkov-problem-matcher.json"
 IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
 
 SCAN_FILES_FLAG=""
+
 if [ -z "$CHANGED_FILES" ]; then
     echo "No files to scan"
     CHECKOV_EXIT_CODE=0
@@ -73,6 +74,7 @@ else
   
   CHECKOV_EXIT_CODE=$?
 fi
+
 echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
@@ -81,4 +83,5 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   rm -fr $INPUT_DIRECTORY/.external_modules
   exit $CHECKOV_EXIT_CODE
 fi
+
 exit $CHECKOV_EXIT_CODE
