@@ -63,6 +63,7 @@ git fetch ${GITHUB_HEAD_REF/#/'origin '} #&>/dev/null
 BASE_REF=$(git rev-parse ${GITHUB_BASE_REF/#/'origin/'})
 HEAD_REF=$(git rev-parse ${GITHUB_HEAD_REF/#/'origin/'})
 CHANGED_FILES=$(git diff --diff-filter=d --name-only $BASE_REF $HEAD_REF | tr '\n' ' ')
+popd
 
 IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
 
