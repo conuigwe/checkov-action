@@ -57,13 +57,21 @@ fi
 
 echo "::add-matcher::checkov-problem-matcher.json"
 
+pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
+git fetch ${GITHUB_BASE_REF/#/'origin '} #&>/dev/null
+git fetch ${GITHUB_HEAD_REF/#/'origin '} #&>/dev/null
+BASE_REF=$(git rev-parse ${GITHUB_BASE_REF/#/'origin/'})
+HEAD_REF=$(git rev-parse ${GITHUB_HEAD_REF/#/'origin/'})
+CHANGED_FILES=$(git diff --diff-filter=d --name-only $BASE_REF $HEAD_REF | tr '\n' ' ')
+
 IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
 
 SCAN_FILES_FLAG=""
 
 if [ -z "$CHANGED_FILES" ]; then
-    echo "No files to scan" > checkov_stdout
-    CHECKOV_EXIT_CODE=0
+  echo "No files to scan" > checkov_stdout
+  CHECKOV_EXIT_CODE=0
+  
 else
   echo "running checkov on files: $CHANGED_FILES"
   for f in "${files2scan[@]}"
