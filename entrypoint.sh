@@ -57,7 +57,7 @@ fi
 
 echo "::add-matcher::checkov-problem-matcher.json"
 
-#pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
+pushd $GITHUB_WORKSPACE/$INPUT_DIRECTORY #&>/dev/null
 git fetch ${GITHUB_BASE_REF/#/'origin '} #&>/dev/null
 git fetch ${GITHUB_HEAD_REF/#/'origin '} #&>/dev/null
 BASE_REF=$(git rev-parse ${GITHUB_BASE_REF/#/'origin/'})
