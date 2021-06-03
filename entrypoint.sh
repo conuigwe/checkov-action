@@ -86,8 +86,4 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   exit $CHECKOV_EXIT_CODE
 fi
 
-#echo $CHECKOV_EXIT_CODE
-outcome=$(echo $CHECKOV_EXIT_CODE)
-
-echo $outcome
 exit $CHECKOV_EXIT_CODE
