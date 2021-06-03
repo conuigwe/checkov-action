@@ -83,6 +83,7 @@ else
   CHECKOV_EXIT_CODE=$?
 fi
 
+popd 
 echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
