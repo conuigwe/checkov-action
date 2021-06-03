@@ -57,27 +57,24 @@ fi
 
 echo "::add-matcher::checkov-problem-matcher.json"
 
-#IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
+IFS=' ' read -r -a files2scan <<< "$CHANGED_FILES"
 
-#SCAN_FILES_FLAG=""
+SCAN_FILES_FLAG=""
 
-#if [ -z "$CHANGED_FILES" ]; then
-#    echo "No files to scan" > checkov_stdout
-#    CHECKOV_EXIT_CODE=0
-#else
-#  echo "running checkov on files: $CHANGED_FILES"
-#  for f in "${files2scan[@]}"
-#  do
-#    SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
-#  done
-  #checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
+if [ -z "$CHANGED_FILES" ]; then
+    echo "No files to scan" > checkov_stdout
+    CHECKOV_EXIT_CODE=0
+else
+  echo "running checkov on files: $CHANGED_FILES"
+  for f in "${files2scan[@]}"
+  do
+    SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
+  done
+  checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
   
-  #CHECKOV_EXIT_CODE=$?
-#fi
+  CHECKOV_EXIT_CODE=$?
+fi
 
-checkov -d $INPUT_DIRECTORY $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
-  
-CHECKOV_EXIT_CODE=$?
 echo "::set-output name=<checkov>::$(cat checkov_stdout)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
@@ -87,5 +84,4 @@ if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MO
   exit $CHECKOV_EXIT_CODE
 fi
 
-#echo "::set-output name=<exit_code>::$(echo $CHECKOV_EXIT_CODE)"
 #exit $CHECKOV_EXIT_CODE
