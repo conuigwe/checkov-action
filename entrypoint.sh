@@ -2,8 +2,8 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
-warnings_file= /warnings.rule | paste -sd " "
-failure_file= /failure.rule | paste -sd " "
+warnings_file= /usr/local/lib/warnings.rule | paste -sd " "
+failure_file= /usr/local/lib/failure.rule | paste -sd " "
 
 echo $warnings_file
 echo $failure_file
