@@ -80,7 +80,7 @@ else
   CHECKOV_EXIT_CODE=$?
 fi
 
-echo "::set-output name=<checkov_warn>::$(cat checkov_stdout_warn)"
+#echo "::set-output name=<checkov_warn>::$(cat checkov_stdout_warn)"
 echo "::set-output name=<checkov_fail>::$(cat checkov_stdout_fail)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
