@@ -3,7 +3,7 @@
 #
 
 
-warn= `pwd`/warnings.txt
+warn= `pwd`/rules/warnings.txt
 echo $warn
 
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
