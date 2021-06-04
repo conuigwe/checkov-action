@@ -14,8 +14,8 @@ COPY entrypoint.sh /entrypoint.sh
 COPY checkov-problem-matcher.json /usr/local/lib/checkov-problem-matcher.json
 COPY checkov-problem-matcher-softfail.json /usr/local/lib/checkov-problem-matcher-softfail.json
 
-COPY rules/failure.txt /failure.txt
-COPY rules/warnings.txt /warnings.txt
+COPY rules/failure.txt /usr/bin/failure.txt
+COPY rules/warnings.txt /usr/bin/warnings.txt
 
 RUN export warnings_rule="$(cat /warnings.txt | paste -sd ",")" 
 

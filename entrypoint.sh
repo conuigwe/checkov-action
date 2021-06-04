@@ -2,7 +2,7 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
-echo $warnings_rule
+cat /usr/bin/warnings.txt
 
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
