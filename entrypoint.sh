@@ -2,7 +2,6 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
-#cat /usr/bin/warnings.txt
 WARNING_LIST=$(cat /usr/bin/warnings.txt | paste -sd ",")
 FAILURE_LIST=$(cat /usr/bin/failure.txt | paste -sd ",")
 echo $WARNING_LIST
@@ -14,9 +13,9 @@ echo $FAILURE_LIST
 
 
 if [[ ! -z "$INPUT_CHECK" ]]; then
-  CHECK_FLAG="--check $INPUT_CHECK,CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
+  CHECK_FLAG_WARN="--check $INPUT_CHECK,$WARNING_LIST" && CHECK_FLAG_FAIL="--check $INPUT_CHECK,$WARNING_LIST"
 else
-  CHECK_FLAG="--check CKV_AWS_5,CKV_AWS_16,CKV_AWS_17,CKV_AWS_19,CKV_AWS_20,CKV_AWS_29,CKV_AWS_38,CKV_AWS_39,CKV_AWS_42,CKV_AWS_47,CKV_AWS_49"
+  CHECK_FLAG_WARN="--check $WARNING_LIST" && CHECK_FLAG_FAIL="--check $WARNING_LIST"
 fi
 
 if [ ! -z "$INPUT_QUIET" ] && [ "$INPUT_QUIET" = "true" ]; then
@@ -76,12 +75,14 @@ else
   do
     SCAN_FILES_FLAG="$SCAN_FILES_FLAG -f $f"
   done
-  checkov $SCAN_FILES_FLAG $CHECK_FLAG $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout
+  checkov $SCAN_FILES_FLAG $CHECK_FLAG_WARN $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout_warn
+  
+  checkov $SCAN_FILES_FLAG $CHECK_FLAG_FAIL $SKIP_CHECK_FLAG $QUIET_FLAG $SOFT_FAIL_FLAG $FRAMEWORK_FLAG $EXTCHECK_DIRS_FLAG $EXTCHECK_REPOS_FLAG $OUTPUT_FLAG $DOWNLOAD_EXTERNAL_MODULES_FLAG > checkov_stdout_fail
   
   CHECKOV_EXIT_CODE=$?
 fi
 
-echo "::set-output name=<checkov>::$(cat checkov_stdout)"
+echo "::set-output name=<checkov_fail>::$(cat checkov_stdout_fail)"
 
 if [ ! -z "$INPUT_DOWNLOAD_EXTERNAL_MODULES" ] && [ "$INPUT_DOWNLOAD_EXTERNAL_MODULES" = "true" ]; then
   echo "Cleaning up $INPUT_DIRECTORY/.external_modules directory"

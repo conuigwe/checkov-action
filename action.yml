@@ -59,5 +59,7 @@ runs:
     - ${{ inputs.log_level }}
 
 outputs:
-  checkov:
-    description: 'output from checkov'
+  checkov_warn:
+    description: 'warning outputs from checkov'
+  checkov_fail:
+    description: 'failing outputs from checkov'
