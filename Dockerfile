@@ -14,5 +14,8 @@ COPY entrypoint.sh /entrypoint.sh
 COPY checkov-problem-matcher.json /usr/local/lib/checkov-problem-matcher.json
 COPY checkov-problem-matcher-softfail.json /usr/local/lib/checkov-problem-matcher-softfail.json
 
+COPY rules/failure.rule /rules/failure.rule
+COPY rules/warnings.rule /rules/warnings.rule
+
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
