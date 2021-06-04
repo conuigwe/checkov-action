@@ -3,8 +3,8 @@
 #
 
 
-
-echo `pwd`
+warn= `pwd`/warnings.txt
+echo $warn
 
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"

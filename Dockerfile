@@ -17,6 +17,5 @@ COPY checkov-problem-matcher-softfail.json /usr/local/lib/checkov-problem-matche
 COPY rules/failure.txt /failure.txt
 COPY rules/warnings.txt /warnings.txt
 
-RUN WARNINGS_FILE = -r /warnings.txt | paste -sd " "
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
