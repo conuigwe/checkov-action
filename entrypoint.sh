@@ -2,11 +2,9 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
-cp /warnings.txt "$warnings_file"
-cp /failure.txt "$failure_file"
 
-echo $warnings_file
-echo $failure_file
+
+echo `pwd`
 
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
