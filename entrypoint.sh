@@ -4,7 +4,9 @@
 
 #cat /usr/bin/warnings.txt
 WARNING_LIST=$(cat /usr/bin/warnings.txt | paste -sd ",")
+FAILURE_LIST=$(cat /usr/bin/failure.txt | paste -sd ",")
 echo $WARNING_LIST
+echo $FAILURE_LIST
 
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
