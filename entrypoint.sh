@@ -11,9 +11,9 @@ FAILURE_LIST=$(cat /usr/bin/failure.txt | paste -sd ",")
 
 
 if [[ ! -z "$INPUT_CHECK" ]]; then
-  CHECK_FLAG_WARN="--check $INPUT_CHECK,$WARNING_LIST" && CHECK_FLAG_FAIL="--check $INPUT_CHECK,$WARNING_LIST"
+  CHECK_FLAG_WARN="--check $INPUT_CHECK,$WARNING_LIST" && CHECK_FLAG_FAIL="--check $INPUT_CHECK,$FAILURE_LIST"
 else
-  CHECK_FLAG_WARN="--check $WARNING_LIST" && CHECK_FLAG_FAIL="--check $WARNING_LIST"
+  CHECK_FLAG_WARN="--check $WARNING_LIST" && CHECK_FLAG_FAIL="--check $FAILURE_LIST"
 fi
 
 if [ ! -z "$INPUT_QUIET" ] && [ "$INPUT_QUIET" = "true" ]; then
