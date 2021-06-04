@@ -2,8 +2,8 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
-warnings_file= /warnings.txt | paste -sd " "
-failure_file= /failure.txt | paste -sd " "
+cp /warnings.txt "$warnings_file"
+cp /failure.txt "$failure_file"
 
 echo $warnings_file
 echo $failure_file
