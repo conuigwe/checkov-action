@@ -2,6 +2,12 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
+warnings_file= rules/warnings.rule | paste -sd " "
+failure_file= rules/failure.rule | paste -sd " "
+
+echo $warnings_file
+echo $failure_file
+
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
 [[ ! -z "$INPUT_FRAMEWORK" ]] && FRAMEWORK_FLAG="--framework $INPUT_FRAMEWORK"
 [[ ! -z "$INPUT_OUTPUT_FORMAT" ]] && OUTPUT_FLAG="--output $INPUT_OUTPUT_FORMAT"
