@@ -2,8 +2,8 @@
 # Actions pass inputs as $INPUT_<input name> environment variables
 #
 
-cat /usr/bin/warnings.txt
-WARNING_LIST="$(cat /usr/bin/warnings.txt)" | paste -sd ","
+#cat /usr/bin/warnings.txt
+WARNING_LIST="$(cat /usr/bin/warnings.txt) | paste -sd ",""
 echo $WARNING_LIST
 
 [[ ! -z "$INPUT_SKIP_CHECK" ]] && SKIP_CHECK_FLAG="--skip-check $INPUT_SKIP_CHECK"
